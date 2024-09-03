@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Example</title>
+</head>
+<body>
+    <h1>Notification Example</h1>
+    <button onclick="scheduleNotification()">Schedule Notification</button>
+
+    <script>
+        function scheduleNotification() {
+            const notificationTime = "10:30"; // Set the notification time in HH:MM format
+            const [hours, minutes] = notificationTime.split(':').map(Number);
+            
+            const now = new Date();
+            const targetTime = new Date();
+            targetTime.setHours(hours, minutes, 40, 0);
+
+            // If the target time has already passed today, schedule for tomorrow
+            if (targetTime <= now) {
+                targetTime.setDate(targetTime.getDate() + 1);
+            }
+
+            const timeDifference = targetTime.getTime() - now.getTime();
+
+            setTimeout(() => {
+                notifyUser();
+            }, timeDifference);
+        }
+
+        function notifyUser() {
+            if (Notification.permission === "granted") {
+                new Notification("Time's up!", {
+                    body: "This is your scheduled notification.",
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification("Time's up!", {
+                            body: "This is your scheduled notification.",
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
