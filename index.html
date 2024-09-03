@@ -7,16 +7,27 @@
 </head>
 <body>
     <h1>Notification Example</h1>
+    
+    <!-- Input for Time -->
+    <label for="notifTime">Enter Notification Time (HH:MM):</label>
+    <input type="time" id="notifTime" required>
+    
     <button onclick="scheduleNotification()">Schedule Notification</button>
 
     <script>
         function scheduleNotification() {
-            const notificationTime = "10:30"; // Set the notification time in HH:MM format
-            const [hours, minutes] = notificationTime.split(':').map(Number);
+            const notificationTime = document.getElementById("notifTime").value; // Get time from user input
             
+            if (!notificationTime) {
+                alert("Please enter a valid time.");
+                return;
+            }
+            
+            const [hours, minutes] = notificationTime.split(':').map(Number);
+
             const now = new Date();
             const targetTime = new Date();
-            targetTime.setHours(hours, minutes, 40, 0);
+            targetTime.setHours(hours, minutes, 0, 0);
 
             // If the target time has already passed today, schedule for tomorrow
             if (targetTime <= now) {
@@ -28,6 +39,8 @@
             setTimeout(() => {
                 notifyUser();
             }, timeDifference);
+
+            alert(`Notification scheduled for ${notificationTime}.`);
         }
 
         function notifyUser() {
